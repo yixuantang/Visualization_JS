@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2018 by yixuantang (http://jsbin.com/monoda/6/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://serv.cusp.nyu.edu/~hvo/files/nyc_grads.js" type="text/javascript"></script>
+<style id="jsbin-css">
+.header {
+  color: green;
+}
+
+p{
+  font-size: 14px;
+  font-weight: normal;
+}
+
+#A{
+  color:red;
+  font-weight:bold;
+}
+
+#mysvg{
+  border-width:5px;
+  border-color:rgb(120, 210, 190);
+  border-style:solid;
+  background-color:rgb(10, 20, 10);
+}
+
+div.tooltip {	
+    position: absolute;			
+    text-align: left;			
+    width: 100px;					
+    height: 150px;					
+    padding: 2px;				
+    font: 12px sans-serif;		
+    background: lightsteelblue;	
+    border: 0px;		
+    border-radius: 8px;			
+    pointer-events: none;			
+}
+</style>
+</head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+<body>
+<div id="chart"></div>
+  <svg width = '400' height = '400'>
+  </svg>
+<div>
+
+<script id="jsbin-javascript">
+
+var output = grads.filter(function(obj) {
+  return obj.Cohort == 2002 ||
+    obj.Cohort == 2004 || obj.Cohort == 2006;
+});
+
+var data = output.map(function(row){
+  return [row['Advanced'],row['Borough'],
+          row['Cohort'],row['DroppedOut'],row['Grads'],
+          row['Local'],row['Regents'],row['Total'],row['Type'],row['Advanced'] / row['Total'],
+          row['DroppedOut'] / row['Total']];
+}).filter(function(d,i){
+  return i < 15
+});
+console.log(data);
+var formatPercent = d3.format(",.0%");
+var maxValue = Math.max(...data.map(function(d) {return d[9];}));
+
+var xScale = d3.scaleLinear()
+    .domain([0,0.3])
+    .range([0,300])
+
+var yScale = d3.scaleLinear()
+    .domain([0, 0.3])
+    .range([300,0]);
+
+var yAxis = d3.axisLeft();
+yAxis.scale(yScale)
+      .ticks(5)
+      .tickFormat(formatPercent);
+
+var xAxis = d3.axisBottom();
+xAxis.scale(xScale)
+     .ticks(5)
+     .tickFormat(formatPercent);
+
+var svg = d3.select("svg");
+var g = svg.append("g");
+
+var div = d3.select("body").append("div")	
+    .attr("class", "tooltip")				
+    .style("opacity", 0);
+
+var colorlist = {"2002":"SteelBlue", "2004":"SeaGreen", "2006":"IndianRed"};
+g.selectAll(".mark")
+  .data(data)
+  .enter()
+    .append('circle')
+      .attr('class', 'mark')
+      .attr('cx', function(d,i) {return 40+d[9]*1000;})
+      .attr('cy', function(d,i) {return 300-d[10]*1000;})
+      .attr('stroke','black')
+      .attr('r', 4)
+      .attr('fill',function(d,i) {return colorlist[d[2]];})
+      .on("mouseover", function(d) {		
+            div.transition()		
+                .duration(200)		
+                .style("opacity", .9);		
+            div	.html("Advanced:"+d[0]+ "<br/>"+ 
+                      "Borough:"+d[1]+"<br/>"+ 
+                     "Cohort:"+d[2]+"<br/>"+
+                     "DroppedOut:"+d[3]+"<br/>"+
+                     "Grads:"+d[4]+"<br/>"+
+                     "Local:"+d[5]+"<br/>"+
+                     "Regents:"+d[6]+"<br/>"+
+                     "Total:"+d[7]+"<br/>"+
+                     "Type:"+d[8])	
+                .style("left", (d3.event.pageX) + "px")		
+                .style("top", (d3.event.pageY - 28) + "px");	
+            })					
+      .on("mouseout", function(d) {		
+            div.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        });
+
+svg.append("g")
+    .attr("transform", "translate(40, 300)")
+    .call(xAxis);
+
+svg.append("g")
+  .append("text")
+    .attr("class", "label")
+    .attr("transform", "rotate(-90)")
+    .attr("x", -200)
+    .attr("y", 8)
+    .attr("font-size",12)
+    .text("Dropped Out(%)");
+
+svg.append("g")
+  .append("text")
+    .attr("class", "label")
+    .attr("x", 145)
+    .attr("y", 330)
+    .attr("font-size",12)
+    .text("Advanced Regents(%)");
+
+svg.append("g")
+    .attr("transform", "translate(40, 0)")
+    .call(yAxis);
+
+g.append("rect")
+ .attr("x", 250)
+ .attr("y", 50)
+ .attr("width", 70)
+ .attr("height", 70)
+ .attr("fill", "lightgrey")
+ .attr("stroke", "black");
+
+var color = {"1":"SteelBlue", "2":"SeaGreen", "3":"IndianRed"}
+for (i = 0; i < 3; i++) {
+    g.append("rect")
+ .attr("x", 260)
+ .attr("y", 55 + i * 25)
+ .attr("width", 9)
+ .attr("height", 9)
+ .attr("fill", color[i+1])
+ .attr("stroke", "black")
+ .attr("stroke-width", "1");
+}
+
+for (i = 0; i < 3; i++) {
+    g.append("text")
+ .attr("x", 280)
+ .attr("y", 65 + i * 25)
+ .attr("font-size", 15)
+ .text(2002+i*2);
+}
+
+g.append("text")
+    .attr("x",70)
+    .attr("y",20)
+    .text("NYC High School Graduate Statistics");
+
+</script>
+</body>
+</html>

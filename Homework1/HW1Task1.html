@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2018 by yixuantang (http://jsbin.com/palokim/7/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://serv.cusp.nyu.edu/~hvo/files/nyc_grads.js" type="text/javascript"></script>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.3/d3.min.js"></script>
+  
+<body>
+  <div id = "chart"></div>
+<script id="jsbin-javascript">
+function addElementSVG(parent,name,attrs={}){
+  let SVGNS = "http://www.w3.org/2000/svg";
+  var element = document.createElementNS(SVGNS,name);
+  for (var key in attrs) {
+    element.setAttributeNS(null,key,attrs[key]);
+  }
+  parent.appendChild(element);
+  return element;
+}
+
+var output = grads.filter(function(obj) {
+  return obj.Cohort == 2002 ||
+    obj.Cohort == 2004 || obj.Cohort == 2006;
+});
+
+//console.log(output);
+// here only select first 15 records;
+var data = output.map(function(row){
+  return [row['Advanced'] / row['Total'],
+          row['DroppedOut'] / row['Total'],
+          row['Cohort']];
+}).filter(function(d,i){
+  return i < 15
+});
+console.log(data);
+var colorlist = {"2002":"SteelBlue","2004":"SeaGreen", "2006":"IndianRed"};
+
+var chart = document.getElementById("chart");
+var canvas = addElementSVG(chart,"svg",{"width":300,
+                                        "height":300,
+                                       "style":"background-color:white;"});
+data.forEach(function (d,i) {
+  var plot = addElementSVG(canvas,"circle", {
+ "cx":d[0] * 880 + 10,"cy":(1-d[1])*880 - 590,"r":"4","stroke":"black","stroke-width":1,
+    "fill":colorlist[d[2]]});
+  addElementSVG(canvas, "line",{"x1":30,"x2":30,"y1":35, "y2": 275,"stroke":"black" });
+  addElementSVG(canvas, "line",{"x1":30,"x2":280,"y1":275, "y2":275 ,"stroke":"black"});
+  addElementSVG(canvas,"rect", {"x":220,"y":50,"width":55,"height":55,"fill":'rgb(220, 230, 240)',"stroke":"black"});
+  addElementSVG(canvas,"rect", {"x":225,"y":55,"width":6,"height":6,"fill":'SteelBlue',"stroke":"black"});
+  addElementSVG(canvas,"rect", {"x":225,"y":75,"width":6,"height":6,"fill":'SeaGreen',"stroke":"black"});
+  addElementSVG(canvas,"rect", {"x":225,"y":95,"width":6,"height":6,"fill":'IndianRed',"stroke":"black"});
+})
+  addElementSVG(canvas, "text",{"x":35,"y":25, "font-size":14})
+  .textContent = "NYC High School Graduate Statistics";
+  addElementSVG(canvas, "text",{"x":240,"y":62, "font-size":12})
+  .textContent = "2002";
+  addElementSVG(canvas, "text",{"x":240,"y":82, "font-size":12})
+  .textContent = "2004";
+  addElementSVG(canvas, "text",{"x":240,"y":102, "font-size":12})
+  .textContent = "2006";
+  addElementSVG(canvas, "text",{"x": 100, "y": 295, "font-size":12})
+  .textContent = "Advanced Regents(%)";
+  addElementSVG(canvas, "text",{"x":-200,"y":10, "transform":"rotate(-90)", "font-size":12})
+  .textContent = "Dropped Out(%)";
+// for (i = 0; i < 5; i++) {
+//     addElementSVG(canvas, "line",{"x1":25,"x2":20 + i*10,"y1":75, "y2":75 ,"stroke":"black"});
+//     text += "The number is " + i + "<br>";
+// }
+for (i = 0; i < 5; i++) {
+    addElementSVG(canvas, "text",{"x":12,"y":75 + i*40,"font-size":7})
+    .textContent = (25-5*i) + "%";
+}
+for (i = 0; i < 5; i++) {
+    addElementSVG(canvas, "text",{"x":65 + i *40 ,"y":285,"font-size":7})
+    .textContent = 5* i +5 + "%";
+}
+for (i = 0; i < 5; i++) {
+    addElementSVG(canvas, "line",{"x1":30,"x2":27,"y1":i*40 + 75, "y2":i*40 + 75 ,"stroke":"black"})
+}
+for (i = 0; i < 5; i++) {
+    addElementSVG(canvas, "line",{"x1":i*40 + 70,"x2":i*40 + 70,"y1":275, "y2":278 ,"stroke":"black"})
+}
+
+
+
+</script>
+</body>
+</html>
+
+

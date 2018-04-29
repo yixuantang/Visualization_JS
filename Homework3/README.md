@@ -1,2 +1,2 @@
 NYC Cuisine Search by Zipcode:
-* dayday/pythonanywhere.com
+http://dayday/pythonanywhere.com

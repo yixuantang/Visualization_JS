@@ -1,6 +1,6 @@
 import altair as alt
 import pandas as pd
-#import json
+import json
 
 def createChart(data, zipcode):
     color_expression    = "highlight._vgsid_==datum._vgsid_"
@@ -29,7 +29,7 @@ def createChart(data, zipcode):
 
 def loadData():
     import urllib.request, json
-    with urllib.request.urlopen("https://raw.githubusercontent.com/lingyielia/D3-visual/master/data/nyc_restaurants_by_cuisine.json") as url:
+    with urllib.request.urlopen("https://raw.githubusercontent.com/hvo/datasets/master/nyc_restaurants_by_cuisine.json") as url:
         cuisines = json.loads(url.read().decode())
 
     tmp_list = []
@@ -43,4 +43,3 @@ def loadData():
 
     df = pd.DataFrame(tmp_list)
     return df
-

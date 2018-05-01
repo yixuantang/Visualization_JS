@@ -7,7 +7,6 @@ app.add_url_rule('/', 'root', lambda: app.send_static_file('index.html'))
 
 @app.route('/vis/<zipcode>')
 def visualize(zipcode):
-    #df = data.get(zipcode, None)
     response = ''
     if data is not None:
         response = createChart(data, zipcode).to_json()
@@ -22,3 +21,4 @@ def visualize(zipcode):
 
 if __name__ == '__main__':
     app.run(port=8002)
+

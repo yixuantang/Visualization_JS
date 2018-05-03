@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>NYC Cuisine by Zipcode</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>Cuisine by Zipcode NYC 2018</title>
     <script src="https://fb.me/react-with-addons-15.1.0.js"></script>
     <script src="https://fb.me/react-dom-15.1.0.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.js"></script>
@@ -15,7 +14,7 @@
 <body>
 <div id="ui"></div>
 <div id="vis"></div>
-<script type="text/babel">
+<script type="text/babel" >
     class AppSelectingForm extends React.Component {
         constructor(props) {
             super(props);
@@ -40,8 +39,12 @@
                 <form onSubmit={this.handleSubmit}>
                     <table>
                         <tr>
-                            <h1 class = "header"><em>NYC Cuisine Distribution Search</em></h1>
-                            <p class = "t1">Zip code:<input type="text" value={this.state.value} onChange={this.handleChange} placeholder="where you want to know?"/></p><input type="submit" value="search" />
+                            <h1 class = "header"><em>NYC Cuisine Search by Zipcode</em></h1>
+                            <p class = "t1">Where you want to know:<input type="text" size = "25" value={this.state.value} onChange={this.handleChange} placeholder="Please enter valid zipcode"/>
+                            </p>
+                            <p>
+                                <input type="submit" value="search" />
+                            </p>
                         </tr>
                     </table>
                 </form>
@@ -55,6 +58,17 @@
         document.getElementById('ui')
     );
 </script>
-
+<style>
+    h1 {
+        color: Teal;
+        text-align: center;
+        vertical-align: middle;
+    }
+    p    {
+        font-size: 14px;
+        text-align: center;
+        vertical-align: top;
+    }
+</style>
 </body>
 </html>
